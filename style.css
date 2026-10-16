@@ -7,6 +7,7 @@
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
   --grad: linear-gradient(135deg, #4f8cff, #9b5cff);
+  --grad-btn: linear-gradient(135deg, #3b6fe3, #7a45e6);   /* чуть темнее: белый текст читается лучше */
 
   --space-1: 8px;
   --space-2: 16px;
@@ -28,7 +29,7 @@
   --bg: #f6f8ff;
   --surface: rgba(255, 255, 255, 0.7);
   --text: #0f1033;
-  --text-muted: #6b7194;
+  --text-muted: #5d6388;
   --border: rgba(15, 16, 51, 0.14);
   --header-bg: rgba(246, 248, 255, 0.7);
   --hero-img: url('images/hero-light.webp');
@@ -47,10 +48,11 @@
   --pc-sh: rgba(60, 80, 200, 0.38);
   --pc-sh-s: rgba(60, 80, 200, 0.2);
   --pc-border: rgba(255, 255, 255, 0.55);
-  --pc-muted: #454b78;
+  --pc-muted: #3a406b;
+  --link: #3a62d8;
   --pc-glare: rgba(255, 255, 255, 0.55);
   --error: #d6334d;
-  --ok: #1f8f5f;
+  --ok: #17784f;
   --footer-bg: #e8ecfb;
   color-scheme: light;
 }
@@ -79,7 +81,8 @@
   --pc-sh: rgba(0, 0, 0, 0.6);
   --pc-sh-s: rgba(0, 0, 0, 0.4);
   --pc-border: rgba(255, 255, 255, 0.12);
-  --pc-muted: #b6bce6;
+  --pc-muted: #d3d8f7;
+  --link: #7aa5ff;
   --pc-glare: rgba(160, 180, 255, 0.28);
   --error: #ff8da1;
   --ok: #5fd1a0;
@@ -155,7 +158,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .btn:hover { transform: translateY(-2px); }
 
 .btn--primary {
-  background: var(--grad);
+  background: var(--grad-btn);
   color: #fff;
   box-shadow: var(--shadow-btn);
 }
@@ -264,8 +267,11 @@ button { font: inherit; color: inherit; cursor: pointer; }
   bottom: 0;
   width: 62%;
   background: var(--hero-img) 70% center / cover no-repeat;
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 35%);
-  mask-image: linear-gradient(to right, transparent 0, #000 35%);
+  /* слева и снизу картинка плавно растворяется в фоне */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 35%), linear-gradient(to bottom, #000 82%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent 0, #000 35%), linear-gradient(to bottom, #000 82%, transparent);
+  mask-composite: intersect;
 }
 
 .hero__inner { position: relative; }
@@ -358,13 +364,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
   gap: 8px;
   font-size: 15px;
   font-weight: 500;
-  background: var(--grad);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--link);
 }
-.text-link::after { content: '→'; }
-.text-link:hover { opacity: 0.8; }
+.text-link::after { content: '→'; transition: transform 0.25s; }
+.text-link:hover::after { transform: translateX(4px); }
 
 /* ==========================================================
    7. Страницы (переключение «Обо мне» / «Портфолио»)
@@ -421,7 +424,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   margin: 0 0 var(--space-2);
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: clamp(48px, 7vw, 88px);
+  font-size: clamp(36px, 11vw, 88px);   /* на 320px «Портфолио» не вылезает за экран */
   line-height: 1;
   letter-spacing: -0.03em;
 }
@@ -591,6 +594,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .pcard__arrow::before { content: '↗'; font-size: 18px; }
 
 .pcard:focus-visible { outline-offset: 4px; }
+.pcard:not([href]) { cursor: default; }   /* заглушка без ссылки */
 
 /* наведение (только там, где есть мышь) */
 @media (hover: hover) {
@@ -671,6 +675,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .ccard__arrow { color: var(--text-muted); transition: transform 0.25s, color 0.25s; }
 .ccard__arrow::before { content: '↗'; font-size: 18px; }
+.ccard__arrow--copy { display: grid; place-items: center; }
+.ccard__arrow--copy::before { content: none; }
 
 .ccard:active { transform: scale(0.97); }
 .ccard.is-empty { cursor: default; }
@@ -721,7 +727,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .field__input--area { height: auto; min-height: 132px; padding-block: 14px; resize: vertical; line-height: 1.5; }
-.field__input::placeholder { color: var(--text-muted); opacity: 0.8; }
+.field__input::placeholder { color: var(--text-muted); opacity: 1; }
 .field__input:focus {
   outline: none;
   border-color: #4f8cff;
@@ -902,7 +908,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   color: var(--text-muted);
   transition: background-color 0.2s, color 0.2s;
 }
-.segmented__btn[aria-pressed="true"] { background: var(--grad); color: #fff; }
+.segmented__btn[aria-pressed="true"] { background: var(--grad-btn); color: #fff; }
 
 /* выбор языка */
 .select-wrap { position: relative; }
@@ -1021,6 +1027,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .pf { padding-top: calc(var(--header-h) + var(--space-6)); padding-bottom: 96px; }
   .pf__head { margin-bottom: var(--space-6); }
   .pf__bg { opacity: 0.5; }
+  .pf__bg::before { animation: none; }   /* на телефоне фон статичный: экономим батарею */
   .send { padding-bottom: 64px; }
   .footer__bottom { flex-wrap: wrap; }
   .footer__note { order: 3; width: 100%; }
@@ -1062,565 +1069,27 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* на странице портфолио нижний блок ближе к карточкам */
 .about--pf { padding-top: var(--space-6); }
 
-
-/* ==========================================================
-   11. ДОПОЛНИТЕЛЬНАЯ АДАПТИВНОСТЬ
-   Телефоны, планшеты и небольшие экраны
-   ========================================================== */
-
-/* Защита от горизонтальной прокрутки */
-html {
-  width: 100%;
-  overflow-x: clip;
+/* всплывающее уведомление («Почта скопирована») */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 32px;
+  z-index: 120;
+  padding: 12px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--panel-bg);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 16px 40px -12px var(--pc-sh);
+  font-size: 14px;
+  font-weight: 500;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 16px);
+  transition: opacity 0.25s, transform 0.25s;
 }
-
-body {
-  width: 100%;
-  min-width: 0;
-  overflow-x: clip;
-}
-
-img,
-svg {
-  max-width: 100%;
-}
-
-.container {
-  min-width: 0;
-}
-
-.hero__content,
-.about__text,
-.about__side,
-.pf__head,
-.send__text,
-.cform {
-  min-width: 0;
-}
-
-h1,
-h2,
-h3,
-p,
-a {
-  overflow-wrap: break-word;
-}
-
-/* Планшеты и небольшие ноутбуки */
-@media (max-width: 1024px) {
-  :root {
-    --gutter: 28px;
-    --space-8: 56px;
-    --radius-card: 24px;
-  }
-
-  .hero__title {
-    font-size: clamp(56px, 8vw, 88px);
-  }
-
-  .about__grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-    column-gap: var(--space-4);
-    row-gap: var(--space-6);
-  }
-
-  .about__text,
-  .about__card,
-  .about__side {
-    min-width: 0;
-  }
-
-  .about__card {
-    grid-column: 2;
-    grid-row: 1;
-  }
-
-  .about__side {
-    grid-column: 1 / -1;
-    padding: var(--space-4) 0 0;
-    border-left: 0;
-    border-top: 1px solid var(--border);
-  }
-
-  .pf__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .pcard {
-    min-width: 0;
-  }
-
-  .send__grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-    gap: var(--space-4);
-  }
-
-  .footer__top {
-    grid-template-columns: 1fr auto;
-  }
-
-  .footer__nav {
-    display: none;
-  }
-}
-
-/* Телефоны */
-@media (max-width: 768px) {
-  :root {
-    --header-h: 64px;
-    --gutter: 24px;
-    --space-8: 48px;
-    --radius-card: 22px;
-  }
-
-  /* Шапка */
-  .header__inner {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 12px;
-  }
-
-  .logo {
-    gap: 10px;
-  }
-
-  .logo__mark {
-    width: 38px;
-    height: 38px;
-  }
-
-  .logo__name {
-    font-size: 17px;
-  }
-
-  .header__actions {
-    gap: 8px;
-  }
-
-  .icon-btn {
-    width: 42px;
-    height: 42px;
-  }
-
-  /* Мобильное меню */
-  .nav {
-    top: var(--header-h);
-    padding: 12px var(--gutter) 20px;
-    background: var(--panel-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 16px 30px rgba(20, 30, 80, 0.08);
-  }
-
-  .nav__link {
-    display: block;
-    padding: 13px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 16px;
-  }
-
-  .nav__link:last-child {
-    border-bottom: 0;
-  }
-
-  /* Главный экран */
-  .hero {
-    min-height: auto;
-    padding-top: var(--header-h);
-  }
-
-  .hero__art {
-    height: clamp(240px, 65vw, 390px);
-    min-height: 0;
-    max-height: none;
-    background-position: center;
-  }
-
-  .hero__content {
-    padding: 8px 0 48px;
-  }
-
-  .eyebrow {
-    font-size: 12px;
-    letter-spacing: 0.18em;
-  }
-
-  .hero__title {
-    margin-bottom: 20px;
-    font-size: clamp(54px, 13vw, 82px);
-    line-height: 1.05;
-  }
-
-  .hero__text {
-    max-width: 560px;
-    margin-bottom: 28px;
-    font-size: 16px;
-    line-height: 1.7;
-  }
-
-  .hero__buttons {
-    gap: 12px;
-  }
-
-  .btn {
-    min-height: 48px;
-    height: auto;
-    padding: 14px 22px;
-  }
-
-  /* Блок обо мне */
-  .about {
-    padding-block: 64px;
-  }
-
-  .about__grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 28px;
-  }
-
-  .about__text {
-    order: 0;
-  }
-
-  .about__card {
-    grid-column: auto;
-    grid-row: auto;
-    order: 1;
-    width: 100%;
-  }
-
-  .about__side {
-    grid-column: auto;
-    order: 2;
-    padding: 24px 0 0;
-  }
-
-  .section-title {
-    margin-bottom: 18px;
-    font-size: clamp(34px, 8vw, 48px);
-  }
-
-  .about__text p:last-child {
-    max-width: none;
-  }
-
-  .about__img {
-    border-radius: 20px;
-  }
-
-  .about__subtitle {
-    font-size: 17px;
-  }
-
-  .skills {
-    gap: 8px;
-  }
-
-  .skills__item {
-    padding: 8px 13px;
-    font-size: 12px;
-  }
-
-  /* Портфолио */
-  .pf {
-    padding-top: calc(var(--header-h) + 40px);
-    padding-bottom: 72px;
-  }
-
-  .pf__head {
-    margin-bottom: 36px;
-  }
-
-  .pf__title {
-    font-size: clamp(42px, 10vw, 68px);
-    line-height: 1.08;
-  }
-
-  .pf__lead {
-    font-size: 16px;
-    line-height: 1.7;
-  }
-
-  .pf__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-  }
-
-  .pcard {
-    min-height: 280px;
-    padding: 18px;
-    border-radius: 20px;
-  }
-
-  .pcard__shape {
-    top: 38px;
-    transform: none;
-  }
-
-  .pcard__body {
-    left: 18px;
-    right: 48px;
-    bottom: 18px;
-  }
-
-  .pcard__title {
-    font-size: clamp(16px, 2.8vw, 21px);
-    overflow-wrap: anywhere;
-  }
-
-  .pcard__text {
-    font-size: 12px;
-  }
-
-  .pcard__arrow {
-    right: 14px;
-    bottom: 14px;
-    width: 34px;
-    height: 34px;
-  }
-
-  /* Контакты */
-  .ccards {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 14px;
-  }
-
-  .ccard {
-    padding: 18px;
-    border-radius: 20px;
-  }
-
-  .ccard__icon {
-    width: 46px;
-    height: 46px;
-  }
-
-  .send {
-    padding: 0 0 72px;
-  }
-
-  .send__grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 28px;
-  }
-
-  .send .grad-text {
-    white-space: normal;
-  }
-
-  .cform {
-    gap: 20px;
-    padding: 22px;
-    border-radius: 22px;
-  }
-
-  .field__input {
-    font-size: 16px;
-  }
-
-  .cform__submit {
-    justify-self: stretch;
-  }
-
-  /* Подвал */
-  .footer {
-    padding-top: 36px;
-  }
-
-  .footer__top {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 20px;
-  }
-
-  .footer__bottom {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 12px;
-  }
-
-  .footer__copy {
-    font-size: 12px;
-  }
-
-  .footer__note {
-    grid-column: 1;
-    grid-row: 2;
-    width: auto;
-    font-size: 12px;
-  }
-
-  .footer__up {
-    grid-column: 2;
-    grid-row: 1 / 3;
-    align-self: center;
-  }
-
-  /* Настройки не выходят за границы экрана */
-  .settings {
-    top: calc(var(--header-h) + 8px);
-    right: var(--gutter);
-    width: auto;
-    max-width: 420px;
-    max-height: calc(100dvh - var(--header-h) - 20px);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    border-radius: 22px;
-  }
-
-  .settings__row {
-    gap: 12px;
-  }
-
-  .settings__label {
-    gap: 8px;
-    font-size: 14px;
-  }
-
-  .select {
-    min-width: 120px;
-    max-width: 150px;
-  }
-}
-
-/* Узкие телефоны */
-@media (max-width: 560px) {
-  :root {
-    --gutter: 18px;
-    --space-8: 40px;
-  }
-
-  .pf__grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 20px;
-  }
-
-  .pcard {
-    min-height: 310px;
-    padding: 20px;
-  }
-
-  .pcard__shape {
-    top: 36px;
-  }
-
-  .pcard__body {
-    left: 20px;
-    right: 64px;
-    bottom: 20px;
-  }
-
-  .pcard__title {
-    font-size: 22px;
-  }
-
-  .pcard__text {
-    font-size: 13px;
-  }
-
-  .pcard__arrow {
-    right: 18px;
-    bottom: 18px;
-    width: 38px;
-    height: 38px;
-  }
-
-  .hero__art {
-    height: 62vw;
-    min-height: 220px;
-  }
-
-  .hero__content {
-    padding-bottom: 40px;
-  }
-
-  .hero__buttons {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .hero__buttons .btn {
-    width: 100%;
-  }
-
-  .footer__top .logo__name {
-    font-size: 16px;
-  }
-
-  .footer__top .logo__mark {
-    width: 34px;
-    height: 34px;
-  }
-}
-
-/* Очень узкие экраны: 320–380 px */
-@media (max-width: 380px) {
-  :root {
-    --gutter: 14px;
-  }
-
-  .header__inner {
-    gap: 6px;
-  }
-
-  .logo {
-    gap: 7px;
-  }
-
-  .logo__mark {
-    width: 34px;
-    height: 34px;
-  }
-
-  .logo__name {
-    font-size: 16px;
-  }
-
-  .header__actions {
-    gap: 5px;
-  }
-
-  .icon-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
-  }
-
-  .hero__title {
-    font-size: clamp(48px, 15vw, 58px);
-  }
-
-  .section-title {
-    font-size: 34px;
-  }
-
-  .pf__title {
-    font-size: 40px;
-  }
-
-  .cform {
-    padding: 16px;
-  }
-
-  .ccard {
-    padding: 14px;
-  }
-
-  .settings {
-    padding: 16px;
-  }
-
-  .settings__label {
-    gap: 6px;
-  }
-
-  .select {
-    min-width: 105px;
-    padding-inline: 10px 28px;
-  }
-
-  .settings__row {
-    gap: 8px;
-  }
-}
+.toast.is-show { opacity: 1; transform: translate(-50%, 0); }
 
 /* Устройства без мыши: не рассчитываем на hover */
 @media (hover: none) {
@@ -1638,29 +1107,45 @@ a {
   .pcard__shape {
     transform: none;
   }
+
+  /* нажатие на карточку остаётся: без этой строки «вдавливание» на телефоне пропало бы */
+  .pcard:active {
+    transform: scale(0.96);
+  }
 }
 
 /* Учитываем вырезы и безопасные зоны телефона */
 @supports (padding: max(0px)) {
+  /* высота шапки растёт на размер выреза: на неё опираются Hero, Портфолио, меню и панель настроек */
+  :root {
+    --header-h: calc(72px + env(safe-area-inset-top, 0px));
+  }
+
   .header {
-    padding-top: env(safe-area-inset-top);
-    height: calc(var(--header-h) + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top, 0px);
   }
 
-  .nav {
-    top: calc(var(--header-h) + env(safe-area-inset-top));
-  }
-
-  .settings {
-    top: calc(
-      var(--header-h) + env(safe-area-inset-top) + 8px
-    );
+  /* в горизонтальном положении не заезжаем под вырезы по бокам */
+  .container {
+    padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
   }
 
   .footer {
     padding-bottom: max(
       var(--space-4),
-      env(safe-area-inset-bottom)
+      env(safe-area-inset-bottom, 0px)
     );
   }
+
+  .toast {
+    bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* печать: убираем лишнее */
+@media print {
+  .header, .settings, .toast, .footer__up, .pf__bg, .hero__art { display: none !important; }
+  body { background: #fff; color: #000; }
+  .view[hidden] { display: none !important; }
 }
