@@ -1202,6 +1202,38 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .pcard.is-desc-open .pcard__shape { opacity: 0; }
 }
 
+/* ===== Иконки в карточках 01 и 02 ===== */
+.pcard__badges {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.badge {
+  padding: 8px 18px;
+  border-radius: 12px;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 18px -6px var(--pc-sh);
+}
+.badge--html {
+  margin-right: 36px;
+  background: linear-gradient(135deg, #f56a3c, #e34c26);
+}
+.badge--css {
+  margin-left: 36px;
+  background: linear-gradient(135deg, #3fa0ff, #1572b6);
+}
+.pcard__icon {
+  display: block;
+  width: 64px;
+  height: 96px;
+  filter: drop-shadow(0 12px 14px var(--pc-sh));
+}
+
 /* печать: убираем лишнее */
 @media print {
   .header, .settings, .toast, .footer__up, .pf__bg, .hero__art { display: none !important; }
