@@ -441,14 +441,33 @@ function route() {
 
 window.addEventListener('hashchange', route);
 
-/* ---------- Карточки портфолио: наклон, блик, волна ---------- */
+/* ---------- Карточки портфолио: наклон, блик, волна, описание по нажатию ---------- */
 const cards = document.querySelectorAll('.pcard');
 const canMove = () => root.dataset.animations !== 'off';
+const isTouchScreen = window.matchMedia('(hover: none)');
+
+// закрыть описание у всех карточек (кроме одной, если передать её)
+function closeAllDescs(except) {
+  cards.forEach(c => { if (c !== except) c.classList.remove('is-desc-open'); });
+}
 
 cards.forEach(card => {
-  // у заглушек нет ссылки или она ведёт на якорь: переход не нужен
   card.addEventListener('click', e => {
     const href = card.getAttribute('href');
+    const hasDesc = !!card.querySelector('.pcard__desc');
+    const isOpen = card.classList.contains('is-desc-open');
+
+    // телефон: первое нажатие открывает описание, второе открывает ссылку
+    if (isTouchScreen.matches && hasDesc && !isOpen) {
+      e.preventDefault();
+      closeAllDescs(card);
+      card.classList.add('is-desc-open');
+      return;
+    }
+
+    closeAllDescs(card);
+
+    // заглушки без ссылки или с якорем: переход не нужен
     if (!href || href.startsWith('#')) e.preventDefault();
   });
 
@@ -480,6 +499,11 @@ cards.forEach(card => {
     fx.appendChild(wave);
     wave.addEventListener('animationend', () => wave.remove());
   });
+});
+
+// нажатие вне карточек закрывает все описания
+document.addEventListener('click', e => {
+  if (!e.target.closest('.pcard')) closeAllDescs(null);
 });
 
 /* ---------- Контакты: карточки ---------- */
