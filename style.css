@@ -1199,6 +1199,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
   box-shadow: 0 12px 28px -8px var(--pc-sh);
 }
 
+/* ===== Телефон: описание открывается по первому нажатию ===== */
+@media (hover: none) {
+  .pcard.is-desc-open .pcard__desc { opacity: 1; transform: none; }
+  .pcard.is-desc-open .pcard__shape { opacity: 0; }
+}
+
 /* печать: убираем лишнее */
 @media print {
   .header, .settings, .toast, .footer__up, .pf__bg, .hero__art { display: none !important; }
