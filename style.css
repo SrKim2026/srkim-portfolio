@@ -1183,6 +1183,22 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .pcard:focus-visible .pcard__shape { opacity: 0; }
 }
 
+/* ===== Фото в карточке 03 ===== */
+.pcard--3 .pcard__shape {
+  top: 20px;
+  left: 50%;
+  width: 142px;
+  height: 190px;
+  margin-left: -71px;
+}
+.pcard__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 14px;
+  box-shadow: 0 12px 28px -8px var(--pc-sh);
+}
+
 /* печать: убираем лишнее */
 @media print {
   .header, .settings, .toast, .footer__up, .pf__bg, .hero__art { display: none !important; }
