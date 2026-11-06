@@ -614,12 +614,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .pcard:hover .pcard__arrow { transform: translate(3px, -3px); background: var(--grad); color: #fff; }
 }
 
-/* нажатие (и на мыши, и на телефоне) */
-.pcard:active {
-  --lift: 0px;
-  --s: 0.96;
-}
-.pcard:active .pcard__shape { transform: translateZ(35px) scale(0.9); transition-duration: 0.15s; }
+/* ===== Телефон: описание открывается по первому нажатию ===== */
+.pcard.is-desc-open .pcard__desc { opacity: 1; transform: none; }
+.pcard.is-desc-open .pcard__shape { opacity: 0; }
 
 /* ==========================================================
    8.1 Контакты
