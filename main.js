@@ -444,7 +444,10 @@ window.addEventListener('hashchange', route);
 /* ---------- Карточки портфолио: наклон, блик, волна, описание по нажатию ---------- */
 const cards = document.querySelectorAll('.pcard');
 const canMove = () => root.dataset.animations !== 'off';
-const isTouchScreen = window.matchMedia('(hover: none)');
+
+// запоминаем, чем нажали последний раз: пальцем (touch), мышкой (mouse) или пером (pen)
+let lastPointerType = 'mouse';
+document.addEventListener('pointerdown', e => { lastPointerType = e.pointerType; }, true);
 
 // закрыть описание у всех карточек (кроме одной, если передать её)
 function closeAllDescs(except) {
@@ -456,9 +459,10 @@ cards.forEach(card => {
     const href = card.getAttribute('href');
     const hasDesc = !!card.querySelector('.pcard__desc');
     const isOpen = card.classList.contains('is-desc-open');
+    const byFinger = lastPointerType !== 'mouse';
 
-    // телефон: первое нажатие открывает описание, второе открывает ссылку
-    if (isTouchScreen.matches && hasDesc && !isOpen) {
+    // палец: первое нажатие открывает описание, второе открывает ссылку
+    if (byFinger && hasDesc && !isOpen) {
       e.preventDefault();
       closeAllDescs(card);
       card.classList.add('is-desc-open');
